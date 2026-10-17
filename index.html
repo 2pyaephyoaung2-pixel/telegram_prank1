@@ -1,0 +1,76 @@
+<script>
+const events=[
+ ["INIT","Starting visual effects..."],
+ ["SCAN","Checking demo modules... OK"],
+ ["NET","Rendering fictional signal map... OK"],
+ ["SAFE","No Telegram account connected."],
+ ["WARN","Suspicious-looking animation detected!"],
+ ["SYS","Generating neon terminal effects..."],
+ ["CHECK","Demo safety check passed."],
+ ["DONE","Preparing prank reveal..."]
+];
+let timer=null;
+
+function addLine(tag,message){
+ const terminal=document.getElementById("terminal");
+ const div=document.createElement("div");
+ div.className="line";
+ const label=document.createElement("span");
+ label.className="green";
+ label.textContent="["+tag+"] ";
+ div.append(label,document.createTextNode(message));
+ terminal.appendChild(div);
+ terminal.scrollTop=terminal.scrollHeight;
+}
+
+function startScan(){
+ if(timer)return;
+ let i=0;
+ const button=document.getElementById("start");
+ button.disabled=true;
+ button.textContent="SCANNING...";
+ document.getElementById("task").textContent="RUNNING SIMULATION";
+
+ timer=setInterval(()=>{
+  if(i>=events.length){
+   clearInterval(timer);
+   timer=null;
+   document.getElementById("main").style.display="none";
+   document.getElementById("hero").style.display="none";
+   document.getElementById("alert").style.display="none";
+   document.getElementById("reveal").style.display="block";
+   return;
+  }
+
+  addLine(events[i][0],events[i][1]);
+  const progress=Math.round((i+1)/events.length*100);
+  document.getElementById("fill").style.width=progress+"%";
+  document.getElementById("percent").textContent=progress+"%";
+  document.getElementById("task").textContent=
+   ["STARTING","CHECKING MODULES","DRAWING EFFECTS",
+    "SAFETY CHECK","VISUAL ALERT","RENDERING",
+    "VERIFYING DEMO","REVEAL READY"][i];
+  i++;
+ },800);
+}
+
+function resetScan(){
+ if(timer){clearInterval(timer);timer=null}
+ document.getElementById("main").style.display="block";
+ document.getElementById("hero").style.display="block";
+ document.getElementById("alert").style.display="block";
+ document.getElementById("reveal").style.display="none";
+ document.getElementById("terminal").innerHTML=
+  '<div class="line green">[BOOT] NEON interface initialized.</div>'+
+  '<div class="line cyan">[INFO] Waiting for your command...</div>'+
+  '<div class="line">[SAFE] No real account connected.</div>';
+ document.getElementById("fill").style.width="0%";
+ document.getElementById("percent").textContent="0%";
+ document.getElementById("task").textContent="READY TO START";
+ const button=document.getElementById("start");
+ button.disabled=false;
+ button.textContent="⚡ INITIATE SCAN";
+}
+</script>
+</body>
+</html>
